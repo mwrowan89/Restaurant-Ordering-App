@@ -1,0 +1,77 @@
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: my_mariadb_container
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: secret123
+      MARIADB_DATABASE: daamdb
+      MARIADB_USER: root
+      MARIADB_PASSWORD: secret123
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - app-network
+
+  auth-service:
+    image: eclipse-temurin:21-jdk-jammy
+    container_name: auth_service
+    restart: unless-stopped
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_NAME=daamdb
+      - DB_USER=root
+      - DB_PASSWORD=secret123
+      - SERVER_PORT=9000
+    volumes:
+      - ../backend/Capstone_Java_Backend/Auth:/app
+    working_dir: /app
+    command: java -jar ./daam-auth-0.0.1-SNAPSHOT.jar
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mariadb
+    networks:
+      - app-network
+
+  daam-service:
+    image: eclipse-temurin:21-jdk-jammy
+    container_name: daam_service
+    restart: unless-stopped
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_NAME=daamdb
+      - DB_USER=root
+      - DB_PASSWORD=secret123
+      - SERVER_PORT=8080
+      - DEBUG_LEVEL=INFO
+      - DAAM_SEC=false
+      - DB_DDL=update
+      - DB_INIT=always
+      - DB_ON_ERR=true
+      - SEC_DEBUG=INFO
+      - SPRINGDOC_SWAGGER_UI_PATH=/swagger-ui.html
+      - SPRINGDOC_API_DOCS_PATH=/api-docs
+    volumes:
+      - ../backend/Capstone_Java_Backend/Server:/app
+    working_dir: /app
+    command: java -jar ./daamsrv-0.0.1-SNAPSHOT.jar
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+      - auth-service
+    networks:
+      - app-network
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

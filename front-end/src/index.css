@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+.cart-icon-comp {
+  @apply fixed top-20 right-10;
+  @apply z-50;
+  @apply flex items-center justify-center;
+}
