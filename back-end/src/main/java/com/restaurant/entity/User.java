@@ -7,7 +7,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int userId;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -45,12 +45,12 @@ public class User {
     private Set<String> roles;
 
     // Getters and Setters
-    public int getId() {
-        return id;
+    public int getUSerId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int id) {
+        this.userId = id;
     }
 
     public String getUsername() {

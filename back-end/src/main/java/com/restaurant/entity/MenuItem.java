@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int menuItemId;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -24,8 +24,8 @@ public class MenuItem {
     private Boolean available;
 
     //Getters and Setters
-    public int getId() {
-        return id;
+    public int getMenuItemId() {
+        return menuItemId;
     }
 
     public String getName() {
@@ -52,8 +52,8 @@ public class MenuItem {
         return available;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setMenuItemId(int id) {
+        this.menuItemId = id;
     }
 
     public void setName(String name) {

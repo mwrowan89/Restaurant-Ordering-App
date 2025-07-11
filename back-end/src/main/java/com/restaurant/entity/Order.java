@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int orderId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -30,11 +30,11 @@ public class Order {
 
     // Getters and Setters
     public Integer getId() {
-        return id;
+        return orderId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.orderId = id;
     }
 
     public User getUser() {
