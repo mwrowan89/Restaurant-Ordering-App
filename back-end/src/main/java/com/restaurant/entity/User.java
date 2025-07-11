@@ -21,18 +21,22 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     private String imageUrl;
 
     private String pan;
 
+    @Column(nullable = false)
+    private int creditCardNumber;
+
+    @Column(nullable = false)
     private Integer expiryMonth;
 
+    @Column(nullable = false)
     private Integer expiryYear;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -103,6 +107,14 @@ public class User {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public int getCreditCardNumber() {
+        return creditCardNumber;
+    }
+
+    public void setCreditCardNumber(int creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
     }
 
     public String getPan() {
