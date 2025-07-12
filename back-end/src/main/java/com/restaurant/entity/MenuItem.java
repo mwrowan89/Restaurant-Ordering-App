@@ -3,10 +3,11 @@ package com.restaurant.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "menuitems")
 public class MenuItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int menuItemId;
+    @Column(name = "id")
+    private String id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -18,14 +19,15 @@ public class MenuItem {
     @Column(nullable = false)
     private double price;
 
+    @Column(name = "imageurl")
     private String imageUrl;
 
     @Column(nullable = false)
     private Boolean available;
 
     //Getters and Setters
-    public int getMenuItemId() {
-        return menuItemId;
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -52,8 +54,8 @@ public class MenuItem {
         return available;
     }
 
-    public void setMenuItemId(int id) {
-        this.menuItemId = id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {

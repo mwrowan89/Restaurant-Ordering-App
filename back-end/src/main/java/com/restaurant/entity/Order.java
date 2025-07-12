@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderId;
+    @Column(name = "id")
+    private String orderId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userid", nullable = false)
     private User user;
 
     private LocalDateTime orderTime;
@@ -29,11 +30,11 @@ public class Order {
     private String status;
 
     // Getters and Setters
-    public Integer getId() {
+    public String getId() {
         return orderId;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.orderId = id;
     }
 

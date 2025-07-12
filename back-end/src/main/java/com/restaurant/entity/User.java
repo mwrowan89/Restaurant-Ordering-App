@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    @Column(name = "id")
+    private String userId;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -45,11 +46,11 @@ public class User {
     private Set<String> roles;
 
     // Getters and Setters
-    public int getUSerId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int id) {
+    public void setUserId(String id) {
         this.userId = id;
     }
 

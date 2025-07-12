@@ -1,5 +1,5 @@
 export interface CartItem {
-  id: number;
+  id: string;
   name: string;
   description: string;
   category: string;
@@ -7,14 +7,14 @@ export interface CartItem {
   imageurl: string;
   available: boolean;
   quantity: number;
-  updateCartItemQuantity: (id: number, quantity: number) => void;
+  updateCartItemQuantity: (id: string, quantity: number) => void;
 }
 
 export interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number) => void;
+  removeFromCart: (id: string) => void;
   clearCart: () => void;
   getCartTotal: () => number;
-  updateCartItemQuantity: (id: number, quantity: number) => void;
+  updateCartItemQuantity: (id: string, quantity: number) => void;
 }

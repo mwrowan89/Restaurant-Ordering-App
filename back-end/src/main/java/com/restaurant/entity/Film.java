@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "films")
 public class Film {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int filmId;
+    @Column(name = "id")
+    private String filmId;
 
     @Column(nullable = false)
     private String title;
@@ -43,11 +44,11 @@ public class Film {
     private Integer voteCount;
 
     // Getters and Setters
-    public int getFilmId() {
+    public String getFilmId() {
         return filmId;
     }
 
-    public void setFilmId(int id) {
+    public void setFilmId(String id) {
         this.filmId = id;
     }
 

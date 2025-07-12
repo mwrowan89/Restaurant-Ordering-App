@@ -3,18 +3,19 @@ package com.restaurant.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "items")
 public class Item {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int itemId;
+    @Column(name = "id")
+    private String itemId;
 
     // Assuming Order and MenuItem are other entities in your application
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
+    @JoinColumn(name = "orderid", nullable = false)
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "menu_item_id", nullable = false)
+    @JoinColumn(name = "itemid", nullable = false)
     private MenuItem menuItem;
 
     @Column(nullable = false)
@@ -27,11 +28,11 @@ public class Item {
     private String firstName;
 
     // Getters and Setters
-    public int getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
-    public void setItemId(int id) {
+    public void setItemId(String id) {
         this.itemId = id;
     }
 
