@@ -10,6 +10,8 @@ const MenuList = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { addToCart } = useCart();
 
+  console.log("Menu Items:", menuItems);
+
   const handleAddToCart = (item: MenuItem) => {
     addToCart({
       id: item.id,
@@ -20,7 +22,7 @@ const MenuList = () => {
       name: item.name,
       price: item.price,
       quantity: 1,
-      updateCartItemQuantity: (id: number, quantity: number) => {
+      updateCartItemQuantity: (id: string, quantity: number) => {
         console.log(`Updating item ${id} quantity to ${quantity}`);
       },
     });
