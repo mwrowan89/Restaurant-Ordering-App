@@ -46,7 +46,7 @@ const OrderDetails = () => {
         // Map order items from menu items
         const filteredMenuItems = orderItemsResponse.data
           .map((orderItem) =>
-            menuItems.find((menuItem) => menuItem.id === orderItem.itemid)
+            menuItems.find((menuItem) => parseInt(menuItem.id) === orderItem.itemid)
           )
           .filter((item): item is MenuItem => item !== undefined);
 
