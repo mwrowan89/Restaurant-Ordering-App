@@ -1,12 +1,10 @@
 #!/bin/bash
-export PGPASSWORD='postgres1'
+
+echo "Setting up MySQL database for the Restaurant Ordering App..."
+echo "This script will create the database and populate it with initial data."
+
+# Call the setup_database.sh script
 BASEDIR=$(dirname $0)
-DATABASE=daam
-psql -U postgres -f "$BASEDIR/dropdb.sql" &&
-createdb -U postgres $DATABASE &&
-psql -U postgres -d $DATABASE -f "$BASEDIR/schema.sql" &&
-psql -U postgres -d $DATABASE -f "$BASEDIR/data.sql" &&
-psql -U postgres -d $DATABASE -f "$BASEDIR/user.sql"
+bash "$BASEDIR/setup_database.sh"
 
-
-//TODO template above
+echo "Database setup complete!"
