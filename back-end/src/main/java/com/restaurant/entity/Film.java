@@ -1,141 +1,143 @@
-// package com.restaurant.entity;
+ package com.restaurant.entity;
 
-// import jakarta.persistence.*;
-// import java.time.LocalDate;
+ import jakarta.persistence.*;
+ import java.time.LocalDate;
 
-// @Entity
-// public class Film {
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private int filmId;
+ @Entity
+ @Table(name = "films")
+ public class Film {
+ @Id
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
+ @Column(name = "id", nullable = false)
+ private Long id;
 
-// @Column(nullable = false)
-// private String title;
+ @Column(name = "title", nullable = false)
+ private String title;
 
-// @Column
-// private String homepage;
+ @Column(name = "homepage")
+ private String homepage;
 
-// @Column
+// @Column()
 // private LocalDate releaseDate;
 
-// @Column
-// private String overview;
+ @Column(name = "overview", length = 1500)
+ private String overview;
 
-// @Column
-// private String posterPath;
+ @Column(name = "posterpath")
+ private String posterPath;
 
-// @Column
-// private Integer runtime;
+ @Column(name = "runtime")
+ private Integer runtime;
 
-// @Column
-// private String tagline;
+ @Column(name = "tagline")
+ private String tagline;
 
-// @Column
-// private Double popularity;
+ @Column(name = "popularity")
+ private Double popularity;
 
-// @Column(unique = true)
-// private String imdbId;
+ @Column(name = "imdbid")
+ private String imdbId;
 
-// @Column
-// private Double voteAverage;
+ @Column(name = "voteaverage")
+ private Double voteAverage;
 
-// @Column
-// private Integer voteCount;
+ @Column(name = "votecount")
+ private Integer voteCount;
 
-// // Getters and Setters
-// public int getFilmId() {
-// return filmId;
-// }
+ // Getters and Setters
+ public Long getId() {
+ return id;
+ }
 
-// public void setFilmId(int id) {
-// this.filmId = id;
-// }
+ public void setId(Long id) {
+ this.id = id;
+ }
 
-// public String getTitle() {
-// return title;
-// }
+ public String getTitle() {
+ return title;
+ }
 
-// public void setTitle(String title) {
-// this.title = title;
-// }
+ public void setTitle(String title) {
+ this.title = title;
+ }
 
-// public String getHomepage() {
-// return homepage;
-// }
+ public String getHomepage() {
+ return homepage;
+ }
 
-// public void setHomepage(String homepage) {
-// this.homepage = homepage;
-// }
+ public void setHomepage(String homepage) {
+ this.homepage = homepage;
+ }
 
 // public LocalDate getReleaseDate() {
 // return releaseDate;
 // }
-
+//
 // public void setReleaseDate(LocalDate releaseDate) {
 // this.releaseDate = releaseDate;
 // }
 
-// public String getOverview() {
-// return overview;
-// }
+ public String getOverview() {
+ return overview;
+ }
 
-// public void setOverview(String overview) {
-// this.overview = overview;
-// }
+ public void setOverview(String overview) {
+ this.overview = overview;
+ }
 
-// public String getPosterPath() {
-// return posterPath;
-// }
+ public String getPosterPath() {
+ return posterPath;
+ }
 
-// public void setPosterPath(String posterPath) {
-// this.posterPath = posterPath;
-// }
+ public void setPosterPath(String posterPath) {
+ this.posterPath = posterPath;
+ }
 
-// public Integer getRuntime() {
-// return runtime;
-// }
+ public Integer getRuntime() {
+ return runtime;
+ }
 
-// public void setRuntime(Integer runtime) {
-// this.runtime = runtime;
-// }
+ public void setRuntime(Integer runtime) {
+ this.runtime = runtime;
+ }
 
-// public String getTagline() {
-// return tagline;
-// }
+ public String getTagline() {
+ return tagline;
+ }
 
-// public void setTagline(String tagline) {
-// this.tagline = tagline;
-// }
+ public void setTagline(String tagline) {
+ this.tagline = tagline;
+ }
 
-// public Double getPopularity() {
-// return popularity;
-// }
+ public Double getPopularity() {
+ return popularity;
+ }
 
-// public void setPopularity(Double popularity) {
-// this.popularity = popularity;
-// }
+ public void setPopularity(Double popularity) {
+ this.popularity = popularity;
+ }
 
-// public String getImdbId() {
-// return imdbId;
-// }
+ public String getImdbId() {
+ return imdbId;
+ }
 
-// public void setImdbId(String imdbId) {
-// this.imdbId = imdbId;
-// }
+ public void setImdbId(String imdbId) {
+ this.imdbId = imdbId;
+ }
 
-// public Double getVoteAverage() {
-// return voteAverage;
-// }
+ public Double getVoteAverage() {
+ return voteAverage;
+ }
 
-// public void setVoteAverage(Double voteAverage) {
-// this.voteAverage = voteAverage;
-// }
+ public void setVoteAverage(Double voteAverage) {
+ this.voteAverage = voteAverage;
+ }
 
-// public Integer getVoteCount() {
-// return voteCount;
-// }
+ public Integer getVoteCount() {
+ return voteCount;
+ }
 
-// public void setVoteCount(Integer voteCount) {
-// this.voteCount = voteCount;
-// }
-// }
+ public void setVoteCount(Integer voteCount) {
+ this.voteCount = voteCount;
+ }
+ }
