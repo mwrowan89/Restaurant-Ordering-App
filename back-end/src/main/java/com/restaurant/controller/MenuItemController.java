@@ -1,6 +1,6 @@
 package com.restaurant.controller;
 
-import com.restaurant.entity.MenuItem;
+import com.restaurant.entity.MenuItems;
 import com.restaurant.repository.MenuItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,18 +22,18 @@ public class MenuItemController {
 
     // Get all menu items
     @GetMapping("/menuitems")
-    public List<MenuItem> getAllMenuItems() {
+    public List<MenuItems> getAllMenuItems() {
         logger.info("Fetching all menu items");
-        List<MenuItem> items = menuItemRepository.findAll();
+        List<MenuItems> items = menuItemRepository.findAll();
         logger.info("Found {} menu items", items.size());
         return items;
     }
 
     // Get menu item by ID
     @GetMapping("/menuitems/{id}")
-    public ResponseEntity<MenuItem> getMenuItemById(@PathVariable(value = "id") String menuItemId) {
+    public ResponseEntity<MenuItems> getMenuItemById(@PathVariable(value = "id") String menuItemId) {
         logger.info("Fetching menu item with ID: {}", menuItemId);
-        Optional<MenuItem> menuItem = menuItemRepository.findById(menuItemId);
+        Optional<MenuItems> menuItem = menuItemRepository.findById(menuItemId);
         if (menuItem.isPresent()) {
             logger.info("Found menu item: {}", menuItem.get().getName());
             return ResponseEntity.ok().body(menuItem.get());
@@ -45,16 +45,16 @@ public class MenuItemController {
 
     // Redirect singular form to plural
     @GetMapping("/menuitem")
-    public List<MenuItem> redirectSingularToPlural() {
+    public List<MenuItems> redirectSingularToPlural() {
         logger.info("Redirecting /menuitem to /menuitems");
         return getAllMenuItems();
     }
 
     // Get menu items by category
     @GetMapping("/menuitems/category/{category}")
-    public List<MenuItem> getMenuItemsByCategory(@PathVariable(value = "category") String category) {
+    public List<MenuItems> getMenuItemsByCategory(@PathVariable(value = "category") String category) {
         logger.info("Fetching menu items with category: {}", category);
-        List<MenuItem> items = menuItemRepository.findByCategory(category);
+        List<MenuItems> items = menuItemRepository.findByCategory(category);
         logger.info("Found {} items in category {}", items.size(), category);
         return items;
     }

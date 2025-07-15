@@ -1,77 +1,77 @@
-package com.restaurant.entity;
+// package com.restaurant.entity;
 
-import jakarta.persistence.*;
+// import jakarta.persistence.*;
 
-@Entity
-public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int itemId;
+// @Entity
+// public class Item {
+// @Id
+// @GeneratedValue(strategy = GenerationType.IDENTITY)
+// private int itemId;
 
-    // Assuming Order and MenuItem are other entities in your application
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+// // Assuming Order and MenuItem are other entities in your application
+// @ManyToOne
+// @JoinColumn(name = "order_id", nullable = false)
+// private Orders order;
 
-    @ManyToOne
-    @JoinColumn(name = "menu_item_id", nullable = false)
-    private MenuItem menuItem;
+// @ManyToOne
+// @JoinColumn(name = "menu_item_id", nullable = false)
+// private MenuItems menuItem;
 
-    @Column(nullable = false)
-    private double price;
+// @Column(nullable = false)
+// private double price;
 
-    @Column
-    private String notes;
+// @Column
+// private String notes;
 
-    @Column(nullable = false)
-    private String firstName;
+// @Column(nullable = false)
+// private String firstName;
 
-    // Getters and Setters
-    public int getItemId() {
-        return itemId;
-    }
+// // Getters and Setters
+// public int getItemId() {
+// return itemId;
+// }
 
-    public void setItemId(int id) {
-        this.itemId = id;
-    }
+// public void setItemId(int id) {
+// this.itemId = id;
+// }
 
-    public Order getOrder() {
-        return order;
-    }
+// public Orders getOrder() {
+// return order;
+// }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
+// public void setOrder(Orders order) {
+// this.order = order;
+// }
 
-    public MenuItem getMenuItem() {
-        return menuItem;
-    }
+// public MenuItems getMenuItem() {
+// return menuItem;
+// }
 
-    public void setMenuItem(MenuItem menuItem) {
-        this.menuItem = menuItem;
-    }
+// public void setMenuItem(MenuItems menuItem) {
+// this.menuItem = menuItem;
+// }
 
-    public double getPrice() {
-        return price;
-    }
+// public double getPrice() {
+// return price;
+// }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+// public void setPrice(double price) {
+// this.price = price;
+// }
 
-    public String getNotes() {
-        return notes;
-    }
+// public String getNotes() {
+// return notes;
+// }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+// public void setNotes(String notes) {
+// this.notes = notes;
+// }
 
-    public String getFirstName() {
-        return firstName;
-    }
+// public String getFirstName() {
+// return firstName;
+// }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-}
+// public void setFirstName(String firstName) {
+// this.firstName = firstName;
+// }
+// }

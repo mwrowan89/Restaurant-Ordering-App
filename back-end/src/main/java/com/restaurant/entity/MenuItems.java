@@ -3,29 +3,28 @@ package com.restaurant.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class MenuItem {
+@Table(name = "menuitems")
+public class MenuItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int menuItemId;
-
-    @Column(nullable = false, unique = true)
+    @Column(name = "id", nullable = false)
+    private Long id;
+    @Column(name = "name", nullable = false)
     private String name;
-
+    @Column(name = "description", length = 1500)
     private String description;
-
+    @Column(name = "category")
     private String category;
-
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     private double price;
-
+    @Column(name = "imageurl")
     private String imageUrl;
-
-    @Column(nullable = false)
+    @Column(name = "available", nullable = false)
     private Boolean available;
 
-    //Getters and Setters
-    public int getMenuItemId() {
-        return menuItemId;
+    // Getters and Setters
+    public Long getMenuItemId() {
+        return id;
     }
 
     public String getName() {
@@ -52,8 +51,8 @@ public class MenuItem {
         return available;
     }
 
-    public void setMenuItemId(int id) {
-        this.menuItemId = id;
+    public void setMenuItemId(Long id) {
+        this.id = id;
     }
 
     public void setName(String name) {
