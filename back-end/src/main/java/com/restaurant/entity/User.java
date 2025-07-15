@@ -3,6 +3,7 @@
  import jakarta.persistence.*;
 
  @Entity
+ @Table(name = "users")
  public class User {
  @Id
 // @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +34,8 @@
  @Column(name = "PAN")
  private String pan;
 
- @Column(name = "credit_card")
- private int creditCardNumber;
+// @Column(name = "credit_card")
+// private int creditCardNumber;
 
  @Column(name = "EXPIRY_MONTH")
  private Integer expiryMonth;
@@ -111,14 +112,14 @@
  public void setImageUrl(String imageUrl) {
  this.imageUrl = imageUrl;
  }
-
- public int getCreditCardNumber() {
- return creditCardNumber;
- }
-
- public void setCreditCardNumber(int creditCardNumber) {
- this.creditCardNumber = creditCardNumber;
- }
+//
+// public int getCreditCardNumber() {
+// return creditCardNumber;
+// }
+//
+// public void setCreditCardNumber(int creditCardNumber) {
+// this.creditCardNumber = creditCardNumber;
+// }
 
  public String getPan() {
  return pan;
