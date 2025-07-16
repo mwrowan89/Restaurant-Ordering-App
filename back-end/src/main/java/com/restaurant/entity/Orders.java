@@ -13,9 +13,9 @@
  @Column (name = "id", nullable = false)
  private Long orderId;
 
- @ManyToOne
- @JoinColumn (name = "userid", nullable = false)
- private User user;
+// @ManyToOne
+// @JoinColumn (name = "userid", nullable = false)
+// private User user;
 
  @Column (name = "ordertime")
  private LocalDateTime orderTime;
@@ -48,13 +48,13 @@
  this.orderId = id;
  }
 
- public User getUser() {
- return user;
- }
-
- public void setUser(User user) {
- this.user = user;
- }
+// public User getUser() {
+// return user;
+// }
+//
+// public void setUser(User user) {
+// this.user = user;
+// }
 
  public LocalDateTime getOrderTime() {
  return orderTime;
