@@ -1,127 +1,138 @@
-// package com.restaurant.entity;
+ package com.restaurant.entity;
 
-// import jakarta.persistence.*;
-// import java.time.LocalDateTime;
+ import jakarta.persistence.*;
+ import jakarta.websocket.ClientEndpoint;
 
-// @Entity
-// public class Orders {
-// @Id
-// @GeneratedValue(strategy = GenerationType.IDENTITY)
-// private int orderId;
+ import java.time.LocalDateTime;
 
-// @ManyToOne
-// @JoinColumn(name = "user_id", nullable = false)
-// private User user;
+ @Entity
+ @Table(name = "orders")
+ public class Orders {
+ @Id
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
+ @Column (name = "id", nullable = false)
+ private Long orderId;
 
-// private LocalDateTime orderTime;
-// private LocalDateTime pickupTime;
+ @ManyToOne
+ @JoinColumn (name = "userid", nullable = false)
+ private User user;
 
-// private String area;
-// private String location;
+ @Column (name = "ordertime")
+ private LocalDateTime orderTime;
+ @Column (name = "pickuptime")
+ private LocalDateTime pickupTime;
 
-// private Double tax;
-// private Double tip;
+ @Column (name = "area")
+ private String area;
+ @Column (name = "location")
+ private String location;
+ @Column (name = "tax")
+ private Double tax;
+ @Column (name = "tip")
+ private Double tip;
+ @Column (name = "pan")
+ private String pan;
+ @Column (name = "expiry_month")
+ private Integer expiryMonth;
+ @Column (name = "expiry_year")
+ private Integer expiryYear;
+ @Column (name = "status")
+ private String status;
 
-// private String pan;
-// private Integer expiryMonth;
-// private Integer expiryYear;
+ // Getters and Setters
+ public Long getId() {
+ return orderId;
+ }
 
-// private String status;
+ public void setId(Long id) {
+ this.orderId = id;
+ }
 
-// // Getters and Setters
-// public Integer getId() {
-// return orderId;
-// }
+ public User getUser() {
+ return user;
+ }
 
-// public void setId(Integer id) {
-// this.orderId = id;
-// }
+ public void setUser(User user) {
+ this.user = user;
+ }
 
-// public User getUser() {
-// return user;
-// }
+ public LocalDateTime getOrderTime() {
+ return orderTime;
+ }
 
-// public void setUser(User user) {
-// this.user = user;
-// }
+ public void setOrderTime(LocalDateTime orderTime) {
+ this.orderTime = orderTime;
+ }
 
-// public LocalDateTime getOrderTime() {
-// return orderTime;
-// }
+ public LocalDateTime getPickupTime() {
+ return pickupTime;
+ }
 
-// public void setOrderTime(LocalDateTime orderTime) {
-// this.orderTime = orderTime;
-// }
+ public void setPickupTime(LocalDateTime pickupTime) {
+ this.pickupTime = pickupTime;
+ }
 
-// public LocalDateTime getPickupTime() {
-// return pickupTime;
-// }
+ public String getArea() {
+ return area;
+ }
 
-// public void setPickupTime(LocalDateTime pickupTime) {
-// this.pickupTime = pickupTime;
-// }
+ public void setArea(String area) {
+ this.area = area;
+ }
 
-// public String getArea() {
-// return area;
-// }
+ public String getLocation() {
+ return location;
+ }
 
-// public void setArea(String area) {
-// this.area = area;
-// }
+ public void setLocation(String location) {
+ this.location = location;
+ }
 
-// public String getLocation() {
-// return location;
-// }
+ public Double getTax() {
+ return tax;
+ }
 
-// public void setLocation(String location) {
-// this.location = location;
-// }
+ public void setTax(Double tax) {
+ this.tax = tax;
+ }
 
-// public Double getTax() {
-// return tax;
-// }
+ public Double getTip() {
+ return tip;
+ }
 
-// public void setTax(Double tax) {
-// this.tax = tax;
-// }
+ public void setTip(Double tip) {
+ this.tip = tip;
+ }
 
-// public Double getTip() {
-// return tip;
-// }
+ public String getPan() {
+ return pan;
+ }
 
-// public void setTip(Double tip) {
-// this.tip = tip;
-// }
+ public void setPan(String pan) {
+ this.pan = pan;
+ }
 
-// public String getPan() {
-// return pan;
-// }
+ public Integer getExpiryMonth() {
+ return expiryMonth;
+ }
 
-// public void setPan(String pan) {
-// this.pan = pan;
-// }
+ public void setExpiryMonth(Integer expiryMonth) {
+ this.expiryMonth = expiryMonth;
+ }
 
-// public Integer getExpiryMonth() {
-// return expiryMonth;
-// }
+ public Integer getExpiryYear() {
+ return expiryYear;
+ }
 
-// public void setExpiryMonth(Integer expiryMonth) {
-// this.expiryMonth = expiryMonth;
-// }
+ public void setExpiryYear(Integer expiryYear) {
+ this.expiryYear = expiryYear;
+ }
 
-// public Integer getExpiryYear() {
-// return expiryYear;
-// }
+ public String getStatus() {
+ return status;
+ }
 
-// public void setExpiryYear(Integer expiryYear) {
-// this.expiryYear = expiryYear;
-// }
-
-// public String getStatus() {
-// return status;
-// }
-
-// public void setStatus(String status) {
-// this.status = status;
-// }
-// }
+ public void setStatus(String status) {
+ this.status = status;
+ }
+ }
