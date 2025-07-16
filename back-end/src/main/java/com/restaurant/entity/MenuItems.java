@@ -4,29 +4,26 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "menuitems")
-public class MenuItem {
+public class MenuItems {
     @Id
-    @Column(name = "id")
-    private String id;
-
-    @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+    @Column(name = "name", nullable = false)
     private String name;
-
+    @Column(name = "description", length = 1500)
     private String description;
-
+    @Column(name = "category")
     private String category;
-
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     private double price;
-
     @Column(name = "imageurl")
-    private String imageurl;
-
-    @Column(nullable = false)
+    private String imageUrl;
+    @Column(name = "available", nullable = false)
     private Boolean available;
 
-    //Getters and Setters
-    public String getId() {
+    // Getters and Setters
+    public Long getMenuItemId() {
         return id;
     }
 
@@ -46,15 +43,15 @@ public class MenuItem {
         return price;
     }
 
-    public String getImageurl() {
-        return imageurl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public Boolean getAvailable() {
         return available;
     }
 
-    public void setId(String id) {
+    public void setMenuItemId(Long id) {
         this.id = id;
     }
 
@@ -74,8 +71,8 @@ public class MenuItem {
         this.price = price;
     }
 
-    public void setImageurl(String imageUrl) {
-        this.imageurl = imageUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setAvailable(Boolean available) {
