@@ -5,6 +5,7 @@ import com.restaurant.repository.MenuItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,12 @@ public class MenuItemController {
         List<MenuItems> items = menuItemRepository.findAll();
         logger.info("Found {} menu items", items.size());
         return items;
+    }
+
+    @PostMapping("/menuitems")
+    public ResponseEntity<MenuItems> addMenuItem(@RequestBody MenuItems menuItem) {
+        MenuItems newMenuItem = menuItemRepository.save(menuItem);
+        return new ResponseEntity<>(newMenuItem, HttpStatus.CREATED);
     }
 
     // Get menu item by ID

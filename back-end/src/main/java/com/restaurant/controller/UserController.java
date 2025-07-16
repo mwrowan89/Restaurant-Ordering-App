@@ -5,6 +5,7 @@ import com.restaurant.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,8 +41,50 @@ public class UserController {
         return ResponseEntity.ofNullable(user.get());
     }
 
-    @GetMapping("/test2")
-    public ResponseEntity<String> testEndpoint() {
-        return ResponseEntity.ok("API is working properly!");
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable(value = "id") String id,
+            @RequestBody User userDetails) {
+        try {
+            Optional<User> optionalUser = userRepository.findById(id);
+            if (!optionalUser.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found with id: " + id);
+            }
+
+            User user = optionalUser.get();
+
+            user.setUsername(userDetails.getUsername());
+            user.setEmail(userDetails.getEmail());
+
+            User updatedUser = userRepository.save(user);
+            return ResponseEntity.ok(updatedUser);
+
+        } catch (Exception e) {
+            // TODO add exception classes
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating the user: " + e.getMessage());
+        }
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable(value = "id") String id) {
+        try {
+            Optional<User> optionalUser = userRepository.findById(id);
+            if (!optionalUser.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found with id: " + id);
+            }
+            userRepository.deleteById(id);
+            return ResponseEntity.ok("User deleted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting the user: " + e.getMessage());
+        }
+    }
+//    @GetMapping("/test2")
+//    public ResponseEntity<String> testEndpoint() {
+//        return ResponseEntity.ok("API is working properly!");
+//    }
 }
