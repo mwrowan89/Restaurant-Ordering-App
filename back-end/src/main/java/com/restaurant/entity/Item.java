@@ -18,7 +18,7 @@
 
 // @ManyToOne
 // @JoinColumn(name = "itemid", nullable = false)
- @Column(name = "itemid")
+ @Column(name = "itemid", nullable = false)
  private String menuItem;
 
  @Column(name = "price", nullable = false)
