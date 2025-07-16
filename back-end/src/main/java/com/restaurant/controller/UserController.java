@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+//TODO add try catches
+// TODO Add comments
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -29,17 +32,22 @@ public class UserController {
         return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
     }
 
-    //TODO add try catches
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(value = "id") String id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok().body(user.get());
-        } else {
-            ResponseEntity.notFound().build();
+    public ResponseEntity<?> getUserById(@PathVariable(value = "id") String id) {
+        try {
+            Optional<User> user = userRepository.findById(id);
+            if (user.isPresent()) {
+                return ResponseEntity.ok(user.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found with id: " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while fetching the user: " + e.getMessage());
         }
-        return ResponseEntity.ofNullable(user.get());
     }
+
 
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(
@@ -55,7 +63,15 @@ public class UserController {
             User user = optionalUser.get();
 
             user.setUsername(userDetails.getUsername());
+            user.setPassword(userDetails.getPassword());
+            user.setFirstName(userDetails.getFirstName());
+            user.setLastName(userDetails.getLastName());
+            user.setPhone(userDetails.getPhone());
             user.setEmail(userDetails.getEmail());
+            user.setImageUrl(userDetails.getImageUrl());
+            user.setPan(userDetails.getPan());
+            user.setExpiryMonth(userDetails.getExpiryMonth());
+            user.setExpiryYear(userDetails.getExpiryYear());
 
             User updatedUser = userRepository.save(user);
             return ResponseEntity.ok(updatedUser);

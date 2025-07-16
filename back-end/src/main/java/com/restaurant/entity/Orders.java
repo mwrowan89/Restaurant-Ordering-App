@@ -1,7 +1,6 @@
  package com.restaurant.entity;
 
  import jakarta.persistence.*;
- import jakarta.websocket.ClientEndpoint;
 
  import java.time.LocalDateTime;
 
@@ -14,8 +13,9 @@
  private Long orderId;
 
 // @ManyToOne
-// @JoinColumn (name = "userid", nullable = false)
-// private User user;
+// @JoinColumn
+ @Column (name = "userid", nullable = false)
+ private String userid;
 
  @Column (name = "ordertime")
  private LocalDateTime orderTime;
@@ -48,13 +48,13 @@
  this.orderId = id;
  }
 
-// public User getUser() {
-// return user;
-// }
-//
-// public void setUser(User user) {
-// this.user = user;
-// }
+ public String getUserid() {
+ return userid;
+ }
+
+ public void setUserid(String user) {
+ this.userid = user;
+ }
 
  public LocalDateTime getOrderTime() {
  return orderTime;
