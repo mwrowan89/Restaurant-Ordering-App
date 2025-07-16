@@ -15,9 +15,9 @@
  @JoinColumn(name = "orderid", nullable = false)
  private Orders order;
 
- @ManyToOne
- @JoinColumn(name = "itemid", nullable = false)
- private MenuItems menuItem;
+// @ManyToOne
+// @JoinColumn(name = "itemid", nullable = false)
+// private MenuItems menuItem;
 
  @Column(name = "price", nullable = false)
  private double price;
@@ -44,14 +44,14 @@
  public void setOrder(Orders order) {
  this.order = order;
  }
-
- public MenuItems getMenuItem() {
- return menuItem;
- }
-
- public void setMenuItem(MenuItems menuItem) {
- this.menuItem = menuItem;
- }
+//
+// public MenuItems getMenuItem() {
+// return menuItem;
+// }
+//
+// public void setMenuItem(MenuItems menuItem) {
+// this.menuItem = menuItem;
+// }
 
  public double getPrice() {
  return price;
