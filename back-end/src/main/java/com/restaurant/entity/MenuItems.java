@@ -9,16 +9,22 @@ public class MenuItems {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
     @Column(name = "name", nullable = false)
     private String name;
+
     @Column(name = "description", length = 1500)
     private String description;
+
     @Column(name = "category")
     private String category;
+
     @Column(name = "price", nullable = false)
     private double price;
+
     @Column(name = "imageurl")
     private String imageurl;
+
     @Column(name = "available", nullable = false)
     private Boolean available;
 

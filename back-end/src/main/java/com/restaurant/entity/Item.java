@@ -10,13 +10,11 @@
  @Column(name = "id")
  private int itemId;
 
- @ManyToOne
- @JoinColumn(name = "orderid", nullable = false)
- private Orders order;
+ @Column(name = "orderid", nullable = false)
+ private String order;
 
- @ManyToOne
- @JoinColumn(name = "itemid", nullable = false)
- private MenuItems menuItem;
+ @Column(name = "itemid", nullable = false)
+ private String menuItem;
 
  @Column(name = "price", nullable = false)
  private double price;
@@ -36,19 +34,19 @@
  this.itemId = id;
  }
 
- public Orders getOrder() {
+ public String getOrder() {
  return order;
  }
 
- public void setOrder(Orders order) {
+ public void setOrder(String order) {
  this.order = order;
  }
 
- public MenuItems getMenuItem() {
+ public String getMenuItem() {
  return menuItem;
  }
 
- public void setMenuItem(MenuItems menuItem) {
+ public void setMenuItem(String menuItem) {
  this.menuItem = menuItem;
  }
 

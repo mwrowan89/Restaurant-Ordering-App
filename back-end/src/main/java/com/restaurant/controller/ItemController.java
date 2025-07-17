@@ -57,7 +57,7 @@ public class ItemController {
 
             Item item = optionalItem.get();
 
-            item.setOrderId(itemDetails.getOrderId());
+            item.setOrder(itemDetails.getOrder());
             item.setMenuItem(itemDetails.getMenuItem());
             item.setPrice(itemDetails.getPrice());
             item.setNotes(itemDetails.getNotes());
@@ -95,7 +95,7 @@ public class ItemController {
     @GetMapping("/items/order/{orderid}")
     public ResponseEntity<?> getAllItemsByOrderId(@PathVariable("orderid") String id) {
         try {
-            List<Item> orderItems = itemRepository.findAllByOrderId(id);
+            List<Item> orderItems = itemRepository.findAllByOrder(id);
 
             if (orderItems.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -118,7 +118,7 @@ public class ItemController {
                                              @RequestBody List<Item> items) {
         try {
             for (Item item : items) {
-                item.setOrderId(orderId);
+                item.setOrder(orderId);
             }
 
             Iterable<Item> savedItems = itemRepository.saveAll(items);
@@ -136,7 +136,7 @@ public class ItemController {
     @DeleteMapping("/items/order/{orderid}")
     public ResponseEntity<?> deleteItemsFromOrder(@PathVariable("orderid") String orderId) {
         try {
-            List<Item> itemsToDelete = itemRepository.findAllByOrderId(orderId);
+            List<Item> itemsToDelete = itemRepository.findAllByOrder(orderId);
 
             if (itemsToDelete.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
