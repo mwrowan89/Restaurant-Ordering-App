@@ -16,12 +16,12 @@ interface Order {
 }
 
 interface OrderItems {
-  id: number;
-  orderId: number;
-  itemid: number;
+  itemId: number;
+  orderId: string;
+  menuItem: string;
   price: number;
   notes: string;
-  firstname: string;
+  firstName: string;
 }
 
 const OrderDetails = () => {
@@ -45,17 +45,18 @@ const OrderDetails = () => {
         console.log("Order Items Response: ", orderItemsResponse.data)
 
         // Map order items from menu items
+        console.log("Menu Items: ", menuItems);
         const filteredMenuItems = orderItemsResponse.data
-          .map((orderItem) =>
-            menuItems.find((menuItem) => parseInt(menuItem.id) === orderItem.id)
-          )
+          .map((orderItem) => {
+            return menuItems.find((menuItem) => 
+              menuItem.id === orderItem.menuItem || 
+              String(menuItem.id) === String(orderItem.menuItem)
+            );
+          })
           .filter((item): item is MenuItem => item !== undefined);
-
-          // 
-          // This is empty
-          setOrderMenuItems(filteredMenuItems);
-          // 
-          // 
+          
+        console.log("Mapped Items: ", filteredMenuItems);
+        setOrderMenuItems(filteredMenuItems);
         setErrorMessage(null);
       } catch (error) {
         if (
