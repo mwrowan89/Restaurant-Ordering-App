@@ -75,6 +75,35 @@ public class FilmControllerTest {
 
         verify(filmRepository).findAll();
     }
+    
+    @Test
+    @DisplayName("GET /api/films - Should return empty list when no films exist")
+    void testGetAllFilmsEmpty() throws Exception {
+        // Arrange
+        List<Film> films = new ArrayList<>();
+        when(filmRepository.findAll()).thenReturn(films);
+
+        // Act & Assert
+        mockMvc.perform(get("/api/films"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+
+        verify(filmRepository).findAll();
+    }
+    
+    @Test
+    @DisplayName("GET /api/films - Should handle exception")
+    void testGetAllFilmsException() throws Exception {
+        // Arrange
+        when(filmRepository.findAll()).thenThrow(new RuntimeException("Database connection error"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/films"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while retrieving films")));
+
+        verify(filmRepository).findAll();
+    }
 
     @Test
     @DisplayName("POST /api/films - Should create a new film")
@@ -90,6 +119,34 @@ public class FilmControllerTest {
                 .andExpect(jsonPath("$.title", is(testFilm.getTitle())));
 
         verify(filmRepository).save(any(Film.class));
+    }
+    
+    @Test
+    @DisplayName("POST /api/films - Should handle exception during film creation")
+    void testAddFilmException() throws Exception {
+        // Arrange
+        when(filmRepository.save(any(Film.class))).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(post("/api/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testFilm)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while saving the film")));
+
+        verify(filmRepository).save(any(Film.class));
+    }
+    
+    @Test
+    @DisplayName("POST /api/films - Should handle invalid JSON")
+    void testAddFilmInvalidJson() throws Exception {
+        // Act & Assert
+        mockMvc.perform(post("/api/films")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("Invalid JSON"))
+                .andExpect(status().isBadRequest());
+                
+        verify(filmRepository, never()).save(any(Film.class));
     }
 
     @Test
@@ -120,6 +177,20 @@ public class FilmControllerTest {
 
         verify(filmRepository).findById("999");
     }
+    
+    @Test
+    @DisplayName("GET /api/films/{id} - Should handle exception")
+    void testGetFilmByIdException() throws Exception {
+        // Arrange
+        when(filmRepository.findById(anyString())).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/films/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while retrieving the film")));
+
+        verify(filmRepository).findById("1");
+    }
 
     @Test
     @DisplayName("PUT /api/films/{id} - Should update film")
@@ -142,6 +213,60 @@ public class FilmControllerTest {
 
         verify(filmRepository).findById("1");
         verify(filmRepository).save(any(Film.class));
+    }
+    
+    @Test
+    @DisplayName("PUT /api/films/{id} - Should return 404 when film not found")
+    void testUpdateFilmNotFound() throws Exception {
+        // Arrange
+        Film updatedFilm = testFilm;
+        updatedFilm.setTitle("Updated Film Title");
+        
+        when(filmRepository.findById("999")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        mockMvc.perform(put("/api/films/999")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedFilm)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Film with ID 999 not found")));
+
+        verify(filmRepository).findById("999");
+        verify(filmRepository, never()).save(any(Film.class));
+    }
+    
+    @Test
+    @DisplayName("PUT /api/films/{id} - Should handle exception during update")
+    void testUpdateFilmException() throws Exception {
+        // Arrange
+        Film updatedFilm = testFilm;
+        updatedFilm.setTitle("Updated Film Title");
+        
+        when(filmRepository.findById("1")).thenReturn(Optional.of(testFilm));
+        when(filmRepository.save(any(Film.class))).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(put("/api/films/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedFilm)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while updating the film")));
+
+        verify(filmRepository).findById("1");
+        verify(filmRepository).save(any(Film.class));
+    }
+    
+    @Test
+    @DisplayName("PUT /api/films/{id} - Should handle invalid JSON")
+    void testUpdateFilmInvalidJson() throws Exception {
+        // Act & Assert
+        mockMvc.perform(put("/api/films/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("Invalid JSON"))
+                .andExpect(status().isBadRequest());
+                
+        verify(filmRepository, never()).findById(anyString());
+        verify(filmRepository, never()).save(any(Film.class));
     }
 
     @Test
@@ -173,5 +298,36 @@ public class FilmControllerTest {
 
         verify(filmRepository).existsById("999");
         verify(filmRepository, never()).deleteById(anyString());
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/films/{id} - Should handle exception during existsById check")
+    void testDeleteFilmExistsByIdException() throws Exception {
+        // Arrange
+        when(filmRepository.existsById(anyString())).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/films/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while deleting the film")));
+
+        verify(filmRepository).existsById("1");
+        verify(filmRepository, never()).deleteById(anyString());
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/films/{id} - Should handle exception during deleteById operation")
+    void testDeleteFilmDeleteByIdException() throws Exception {
+        // Arrange
+        when(filmRepository.existsById("1")).thenReturn(true);
+        doThrow(new RuntimeException("Database error")).when(filmRepository).deleteById("1");
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/films/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while deleting the film")));
+
+        verify(filmRepository).existsById("1");
+        verify(filmRepository).deleteById("1");
     }
 }

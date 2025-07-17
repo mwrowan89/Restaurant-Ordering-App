@@ -71,6 +71,20 @@ public class ItemControllerTest {
 
         verify(itemRepository).findAll();
     }
+    
+    @Test
+    @DisplayName("GET /api/items - Should return empty list when no items exist")
+    void testGetItemsEmpty() throws Exception {
+        // Arrange
+        when(itemRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // Act & Assert
+        mockMvc.perform(get("/api/items"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+
+        verify(itemRepository).findAll();
+    }
 
     @Test
     @DisplayName("GET /api/items/{id} - Should return item by ID")
@@ -100,6 +114,20 @@ public class ItemControllerTest {
 
         verify(itemRepository).findById("999");
     }
+    
+    @Test
+    @DisplayName("GET /api/items/{id} - Should handle exception")
+    void testGetItemByIdException() throws Exception {
+        // Arrange
+        when(itemRepository.findById(anyString())).thenThrow(new RuntimeException("Database connection error"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/items/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while fetching the user")));
+
+        verify(itemRepository).findById("1");
+    }
 
     @Test
     @DisplayName("PUT /api/items/{id} - Should update item")
@@ -123,6 +151,46 @@ public class ItemControllerTest {
         verify(itemRepository).findById("1");
         verify(itemRepository).save(any(Item.class));
     }
+    
+    @Test
+    @DisplayName("PUT /api/items/{id} - Should return 404 when item not found")
+    void testUpdateItemNotFound() throws Exception {
+        // Arrange
+        Item updatedItem = testItem;
+        updatedItem.setNotes("Extra sauce");
+        
+        when(itemRepository.findById("999")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        mockMvc.perform(put("/api/items/999")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedItem)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Item not found")));
+
+        verify(itemRepository).findById("999");
+        verify(itemRepository, never()).save(any(Item.class));
+    }
+    
+    @Test
+    @DisplayName("PUT /api/items/{id} - Should handle exception")
+    void testUpdateItemException() throws Exception {
+        // Arrange
+        Item updatedItem = testItem;
+        
+        when(itemRepository.findById("1")).thenReturn(Optional.of(testItem));
+        when(itemRepository.save(any(Item.class))).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(put("/api/items/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedItem)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred")));
+
+        verify(itemRepository).findById("1");
+        verify(itemRepository).save(any(Item.class));
+    }
 
     @Test
     @DisplayName("DELETE /api/items/{id} - Should delete item")
@@ -135,6 +203,37 @@ public class ItemControllerTest {
         mockMvc.perform(delete("/api/items/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Item deleted successfully")));
+
+        verify(itemRepository).findById("1");
+        verify(itemRepository).deleteById("1");
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/items/{id} - Should return 404 when item not found")
+    void testDeleteItemNotFound() throws Exception {
+        // Arrange
+        when(itemRepository.findById("999")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/items/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Item not found")));
+
+        verify(itemRepository).findById("999");
+        verify(itemRepository, never()).deleteById(anyString());
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/items/{id} - Should handle exception")
+    void testDeleteItemException() throws Exception {
+        // Arrange
+        when(itemRepository.findById("1")).thenReturn(Optional.of(testItem));
+        doThrow(new RuntimeException("Database error")).when(itemRepository).deleteById("1");
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/items/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while deleting")));
 
         verify(itemRepository).findById("1");
         verify(itemRepository).deleteById("1");
@@ -189,6 +288,25 @@ public class ItemControllerTest {
 
         verify(itemRepository).saveAll(anyIterable());
     }
+    
+    @Test
+    @DisplayName("POST /api/items/order/{orderId} - Should handle exception")
+    void testUpdateItemsToOrderException() throws Exception {
+        // Arrange
+        List<Item> items = new ArrayList<>();
+        items.add(testItem);
+        
+        when(itemRepository.saveAll(anyIterable())).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(post("/api/items/order/order123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(items)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while adding items")));
+
+        verify(itemRepository).saveAll(anyIterable());
+    }
 
     @Test
     @DisplayName("DELETE /api/items/order/{orderid} - Should delete all items for order")
@@ -204,6 +322,40 @@ public class ItemControllerTest {
         mockMvc.perform(delete("/api/items/order/order123"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("All items for order ID order123 have been deleted")));
+
+        verify(itemRepository).findAllByOrder("order123");
+        verify(itemRepository).deleteAll(anyIterable());
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/items/order/{orderid} - Should return 404 when no items found")
+    void testDeleteItemsFromOrderNotFound() throws Exception {
+        // Arrange
+        when(itemRepository.findAllByOrder("nonexistent")).thenReturn(new ArrayList<>());
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/items/order/nonexistent"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("No items found for order ID")));
+
+        verify(itemRepository).findAllByOrder("nonexistent");
+        verify(itemRepository, never()).deleteAll(anyIterable());
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/items/order/{orderid} - Should handle exception")
+    void testDeleteItemsFromOrderException() throws Exception {
+        // Arrange
+        List<Item> items = new ArrayList<>();
+        items.add(testItem);
+        
+        when(itemRepository.findAllByOrder("order123")).thenReturn(items);
+        doThrow(new RuntimeException("Database error")).when(itemRepository).deleteAll(anyIterable());
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/items/order/order123"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while deleting items")));
 
         verify(itemRepository).findAllByOrder("order123");
         verify(itemRepository).deleteAll(anyIterable());

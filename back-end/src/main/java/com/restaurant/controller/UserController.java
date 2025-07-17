@@ -101,6 +101,6 @@ public class UserController {
     }
 //    @GetMapping("/test2")
 //    public ResponseEntity<String> testEndpoint() {
-//        return ResponseEntity.ok("API is working properly!");
+//        return ResponseEntity.ok("API is working");
 //    }
 }

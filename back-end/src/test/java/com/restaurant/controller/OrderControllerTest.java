@@ -80,6 +80,20 @@ public class OrderControllerTest {
 
         verify(orderRepository).findAll();
     }
+    
+    @Test
+    @DisplayName("GET /api/orders - Should return empty list when no orders exist")
+    void testGetAllOrdersEmpty() throws Exception {
+        // Arrange
+        when(orderRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // Act & Assert
+        mockMvc.perform(get("/api/orders"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+
+        verify(orderRepository).findAll();
+    }
 
     @Test
     @DisplayName("POST /api/orders - Should create a new order")
@@ -95,6 +109,34 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId", is(testOrder.getId().intValue())));
 
         verify(orderRepository).save(any(Orders.class));
+    }
+    
+    @Test
+    @DisplayName("POST /api/orders - Should handle exception during order creation")
+    void testCreateOrderException() throws Exception {
+        // Arrange
+        when(orderRepository.save(any(Orders.class))).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testOrder)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("Failed to create order")));
+
+        verify(orderRepository).save(any(Orders.class));
+    }
+    
+    @Test
+    @DisplayName("POST /api/orders - Should handle invalid JSON")
+    void testCreateOrderInvalidJson() throws Exception {
+        // Act & Assert
+        mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("Invalid JSON"))
+                .andExpect(status().isBadRequest());
+                
+        verify(orderRepository, never()).save(any(Orders.class));
     }
 
     @Test
@@ -125,6 +167,20 @@ public class OrderControllerTest {
 
         verify(orderRepository).findById("999");
     }
+    
+    @Test
+    @DisplayName("GET /api/orders/{id} - Should handle exception")
+    void testGetOrderByOrderIdException() throws Exception {
+        // Arrange
+        when(orderRepository.findById(anyString())).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/orders/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while fetching the order")));
+
+        verify(orderRepository).findById("1");
+    }
 
     @Test
     @DisplayName("PUT /api/orders/{id} - Should update order")
@@ -146,6 +202,60 @@ public class OrderControllerTest {
         verify(orderRepository).findById("1");
         verify(orderRepository).save(any(Orders.class));
     }
+    
+    @Test
+    @DisplayName("PUT /api/orders/{id} - Should return 404 when order not found")
+    void testUpdateOrderNotFound() throws Exception {
+        // Arrange
+        Orders updatedOrder = testOrder;
+        updatedOrder.setStatus("COMPLETED");
+        
+        when(orderRepository.findById("999")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        mockMvc.perform(put("/api/orders/999")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedOrder)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Order not found")));
+
+        verify(orderRepository).findById("999");
+        verify(orderRepository, never()).save(any(Orders.class));
+    }
+    
+    @Test
+    @DisplayName("PUT /api/orders/{id} - Should handle exception during update")
+    void testUpdateOrderException() throws Exception {
+        // Arrange
+        Orders updatedOrder = testOrder;
+        updatedOrder.setStatus("COMPLETED");
+        
+        when(orderRepository.findById("1")).thenReturn(Optional.of(testOrder));
+        when(orderRepository.save(any(Orders.class))).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(put("/api/orders/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedOrder)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while updating the user")));
+
+        verify(orderRepository).findById("1");
+        verify(orderRepository).save(any(Orders.class));
+    }
+    
+    @Test
+    @DisplayName("PUT /api/orders/{id} - Should handle invalid JSON")
+    void testUpdateOrderInvalidJson() throws Exception {
+        // Act & Assert
+        mockMvc.perform(put("/api/orders/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("Invalid JSON"))
+                .andExpect(status().isBadRequest());
+                
+        verify(orderRepository, never()).findById(anyString());
+        verify(orderRepository, never()).save(any(Orders.class));
+    }
 
     @Test
     @DisplayName("DELETE /api/orders/{id} - Should delete order")
@@ -158,6 +268,37 @@ public class OrderControllerTest {
         mockMvc.perform(delete("/api/orders/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Order deleted successfully")));
+
+        verify(orderRepository).findById("1");
+        verify(orderRepository).deleteById("1");
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/orders/{id} - Should return 404 when order not found")
+    void testDeleteOrderNotFound() throws Exception {
+        // Arrange
+        when(orderRepository.findById("999")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/orders/999"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Order not found")));
+
+        verify(orderRepository).findById("999");
+        verify(orderRepository, never()).deleteById(anyString());
+    }
+    
+    @Test
+    @DisplayName("DELETE /api/orders/{id} - Should handle exception")
+    void testDeleteOrderException() throws Exception {
+        // Arrange
+        when(orderRepository.findById("1")).thenReturn(Optional.of(testOrder));
+        doThrow(new RuntimeException("Database error")).when(orderRepository).deleteById("1");
+
+        // Act & Assert
+        mockMvc.perform(delete("/api/orders/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while deleting the user")));
 
         verify(orderRepository).findById("1");
         verify(orderRepository).deleteById("1");
@@ -193,5 +334,19 @@ public class OrderControllerTest {
                 .andExpect(content().string(containsString("No orders found for userId")));
 
         verify(orderRepository).findByUserid("nonexistent");
+    }
+    
+    @Test
+    @DisplayName("GET /api/orders/user/{userid} - Should handle exception")
+    void testGetOrdersByUserIdException() throws Exception {
+        // Arrange
+        when(orderRepository.findByUserid(anyString())).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/orders/user/user123"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while fetching orders")));
+
+        verify(orderRepository).findByUserid("user123");
     }
 }
