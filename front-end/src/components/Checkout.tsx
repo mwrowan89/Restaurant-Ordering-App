@@ -89,7 +89,6 @@ const Checkout = () => {
       status: "pending"
     };
 
-    console.log("Submitting order data:", orderData);
     try {
       const response = await axios.post("/api/orders", orderData);
       const createdOrderData = response.data;

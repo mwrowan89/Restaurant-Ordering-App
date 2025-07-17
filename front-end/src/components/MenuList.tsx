@@ -21,7 +21,6 @@ const MenuList = () => {
       price: item.price,
       quantity: 1,
       updateCartItemQuantity: (id: string, quantity: number) => {
-        console.log(`Updating item ${id} quantity to ${quantity}`);
       },
     });
     setSuccessMessage(`${item.name} has been added to the cart!`);

@@ -42,10 +42,8 @@ const OrderDetails = () => {
         const orderItemsResponse = await axios.get<OrderItems[]>(
           `/api/items/order/${orderId}`
         );
-        console.log("Order Items Response: ", orderItemsResponse.data)
 
         // Map order items from menu items
-        console.log("Menu Items: ", menuItems);
         const filteredMenuItems = orderItemsResponse.data
           .map((orderItem) => {
             return menuItems.find((menuItem) => 
@@ -55,7 +53,6 @@ const OrderDetails = () => {
           })
           .filter((item): item is MenuItem => item !== undefined);
           
-        console.log("Mapped Items: ", filteredMenuItems);
         setOrderMenuItems(filteredMenuItems);
         setErrorMessage(null);
       } catch (error) {
@@ -92,8 +89,6 @@ const OrderDetails = () => {
     return <p>Loading order details...</p>;
   }
 
-  console.log("Filtered Menu Items: ", orderMenuItems);
-  console.log("Order: ", order);
 
   return (
     <div className="orders-container">
