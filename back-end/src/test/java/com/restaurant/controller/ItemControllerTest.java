@@ -270,6 +270,20 @@ public class ItemControllerTest {
 
         verify(itemRepository).findAllByOrder("nonexistent");
     }
+    
+    @Test
+    @DisplayName("GET /api/items/order/{orderid} - Should handle repository exception")
+    void testGetAllItemsByOrderIdException() throws Exception {
+        // Arrange
+        when(itemRepository.findAllByOrder(anyString())).thenThrow(new RuntimeException("Database error"));
+
+        // Act & Assert
+        mockMvc.perform(get("/api/items/order/order123"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("An error occurred while fetching items")));
+
+        verify(itemRepository).findAllByOrder("order123");
+    }
 
     @Test
     @DisplayName("POST /api/items/order/{orderId} - Should add items to order")
