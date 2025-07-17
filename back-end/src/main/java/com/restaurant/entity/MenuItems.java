@@ -1,9 +1,15 @@
 package com.restaurant.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "menuitems")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MenuItems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,61 +33,4 @@ public class MenuItems {
 
     @Column(name = "available", nullable = false)
     private Boolean available;
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String getImageurl() {
-        return imageurl;
-    }
-
-    public Boolean getAvailable() {
-        return available;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
-    }
-
-    public void setAvailable(Boolean available) {
-        this.available = available;
-    }
 }
