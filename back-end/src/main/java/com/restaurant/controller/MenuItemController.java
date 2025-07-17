@@ -38,8 +38,8 @@ public class MenuItemController {
 
     // Get menu item by ID
     @GetMapping("/menuitems/{id}")
-    public ResponseEntity<MenuItems> getMenuItemById(@PathVariable(value = "id") String menuItemId) {
-        Optional<MenuItems> menuItem = menuItemRepository.findById(menuItemId);
+    public ResponseEntity<MenuItems> getMenuItemById(@PathVariable(value = "id") String id) {
+        Optional<MenuItems> menuItem = menuItemRepository.findById(id);
         if (menuItem.isPresent()) {
             return ResponseEntity.ok().body(menuItem.get());
         } else {

@@ -23,7 +23,7 @@ public class MenuItems {
     private Boolean available;
 
     // Getters and Setters
-    public Long getMenuItemId() {
+    public Long getId() {
         return id;
     }
 
@@ -51,7 +51,7 @@ public class MenuItems {
         return available;
     }
 
-    public void setMenuItemId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
