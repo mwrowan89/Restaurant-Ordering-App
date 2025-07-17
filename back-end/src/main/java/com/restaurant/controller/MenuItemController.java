@@ -27,9 +27,7 @@ public class MenuItemController {
     // Get all menu items
     @GetMapping("/menuitems")
     public List<MenuItems> getAllMenuItems() {
-        logger.info("Fetching all menu items");
         List<MenuItems> items = menuItemRepository.findAll();
-        logger.info("Found {} menu items", items.size());
         return items;
     }
 
@@ -42,13 +40,10 @@ public class MenuItemController {
     // Get menu item by ID
     @GetMapping("/menuitems/{id}")
     public ResponseEntity<MenuItems> getMenuItemById(@PathVariable(value = "id") String menuItemId) {
-        logger.info("Fetching menu item with ID: {}", menuItemId);
         Optional<MenuItems> menuItem = menuItemRepository.findById(menuItemId);
         if (menuItem.isPresent()) {
-            logger.info("Found menu item: {}", menuItem.get().getName());
             return ResponseEntity.ok().body(menuItem.get());
         } else {
-            logger.warn("Menu item not found with ID: {}", menuItemId);
             return ResponseEntity.notFound().build();
         }
     }
