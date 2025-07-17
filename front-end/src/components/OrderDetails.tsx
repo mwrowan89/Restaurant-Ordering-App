@@ -8,7 +8,7 @@ import { MenuItem } from "../types/MenuItemType";
 interface Order {
   id: number;
   userid: number;
-  ordertime: string;
+  orderTime: string;
   tax: number;
   tip: number;
   total: number;
@@ -98,7 +98,7 @@ const OrderDetails = () => {
       </p>
       <p>
         <strong>Order Time:</strong>{" "}
-        {new Date(order.ordertime).toLocaleString()}
+        {new Date(order.orderTime).toLocaleString()}
       </p>
       <p>
         <strong>Status:</strong> {order.status}

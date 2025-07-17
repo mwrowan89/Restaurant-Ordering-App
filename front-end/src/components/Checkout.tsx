@@ -15,7 +15,7 @@ interface OrderItem {
 
 interface OrderData {
   userid: string;
-  ordertime: string;
+  orderTime: string;
   items?: OrderItem[];
   tax: number;
   tip: number;
@@ -75,7 +75,7 @@ const Checkout = () => {
 
     const orderData: OrderData = {
       userid: paymentMethod.userid ? paymentMethod.userid.toString() : "1",
-      ordertime: new Date().toISOString(),
+      orderTime: new Date().toISOString(),
       items: cart.map((item) => ({
         ...item,
         id: item.id ? item.id.toString() : "",
