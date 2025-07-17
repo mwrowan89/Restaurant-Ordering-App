@@ -1,7 +1,6 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.MenuItems;
-import com.restaurant.entity.User;
 import com.restaurant.repository.MenuItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +60,7 @@ public class MenuItemController {
             menuItems.setName(menuItem.getName());
             menuItems.setAvailable(menuItem.getAvailable());
             menuItems.setCategory(menuItem.getCategory());
-            menuItems.setImageUrl(menuItem.getImageUrl());
+            menuItems.setImageurl(menuItem.getImageurl());
             menuItems.setDescription(menuItem.getDescription());
             menuItems.setPrice(menuItem.getPrice());
 

@@ -10,8 +10,6 @@ const MenuList = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const { addToCart } = useCart();
 
-  console.log("Menu Items:", menuItems);
-
   const handleAddToCart = (item: MenuItem) => {
     addToCart({
       id: item.id,

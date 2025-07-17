@@ -18,7 +18,7 @@ public class MenuItems {
     @Column(name = "price", nullable = false)
     private double price;
     @Column(name = "imageurl")
-    private String imageUrl;
+    private String imageurl;
     @Column(name = "available", nullable = false)
     private Boolean available;
 
@@ -43,8 +43,8 @@ public class MenuItems {
         return price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageurl() {
+        return imageurl;
     }
 
     public Boolean getAvailable() {
@@ -71,8 +71,8 @@ public class MenuItems {
         this.price = price;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
     }
 
     public void setAvailable(Boolean available) {
