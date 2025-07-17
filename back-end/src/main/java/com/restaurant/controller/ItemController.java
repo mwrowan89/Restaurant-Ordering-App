@@ -1,16 +1,13 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Item;
-import com.restaurant.entity.User;
 import com.restaurant.repository.ItemRepository;
-import org.aspectj.lang.annotation.RequiredTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +57,7 @@ public class ItemController {
 
             Item item = optionalItem.get();
 
-            item.setOrder(itemDetails.getOrder());
+            item.setOrderId(itemDetails.getOrderId());
             item.setMenuItem(itemDetails.getMenuItem());
             item.setPrice(itemDetails.getPrice());
             item.setNotes(itemDetails.getNotes());
@@ -76,6 +73,7 @@ public class ItemController {
         }
     }
 
+    // Deletes an item from the list
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/items/{id}")
     public ResponseEntity<?> deleteItem(@PathVariable(value = "id") String id) {
@@ -93,5 +91,29 @@ public class ItemController {
         }
     }
 
+    // Get all items assigned to a particular order
+    @GetMapping("/items/order/{orderid}")
+    public ResponseEntity<?> getAllItemsByOrderId(@PathVariable("orderid") String id) {
+        try {
+            List<Item> orderItems = itemRepository.findAllByOrderId(id);
+
+            if (orderItems.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No items found for order ID: " + id);
+            }
+
+            return ResponseEntity.ok(orderItems);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while fetching items.");
+        }
+    }
+
+    // Add list of items to an order
+
+    // Delete to remove a particular item from an order
 
 }

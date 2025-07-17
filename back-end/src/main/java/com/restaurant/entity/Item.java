@@ -14,7 +14,7 @@
 // @ManyToOne
 // @JoinColumn(name = "orderid", nullable = false)
   @Column(name = "orderid", nullable = false)
-  private String order;
+  private String orderId;
 
 // @ManyToOne
 // @JoinColumn(name = "itemid", nullable = false)
@@ -39,12 +39,12 @@
  this.itemId = id;
  }
 
- public String getOrder() {
- return order;
+ public String getOrderId() {
+ return orderId;
  }
 
- public void setOrder(String order) {
- this.order = order;
+ public void setOrderId(String orderId) {
+ this.orderId = orderId;
  }
 
  public String getMenuItem() {
