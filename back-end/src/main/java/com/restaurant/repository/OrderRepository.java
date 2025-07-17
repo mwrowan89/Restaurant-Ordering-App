@@ -1,12 +1,13 @@
 package com.restaurant.repository;
 
 import com.restaurant.entity.Orders;
+import com.restaurant.entity.User;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface OrderRepository extends CrudRepository<Orders, String > {
+public interface OrderRepository extends CrudRepository<Orders, String> {
 
-    List<Orders> findByUserid(String userid);
+    List<Orders> findByUser(User user);
 
 }

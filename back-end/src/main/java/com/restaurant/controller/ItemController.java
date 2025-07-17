@@ -1,7 +1,9 @@
 package com.restaurant.controller;
 
 import com.restaurant.entity.Item;
+import com.restaurant.entity.Orders;
 import com.restaurant.repository.ItemRepository;
+import com.restaurant.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class ItemController {
 
     @Autowired
     private ItemRepository itemRepository;
+    
+    @Autowired
+    private OrderRepository orderRepository;
 
     @GetMapping("/items")
     public List<Item> getItems(){
@@ -57,8 +62,14 @@ public class ItemController {
 
             Item item = optionalItem.get();
 
-            item.setOrderId(itemDetails.getOrderId());
-            item.setMenuItem(itemDetails.getMenuItem());
+            // Set order if provided in the request
+            if (itemDetails.getOrder() != null) {
+                item.setOrder(itemDetails.getOrder());
+            }
+            // Set menuItem if provided in the request
+            if (itemDetails.getMenuItem() != null) {
+                item.setMenuItem(itemDetails.getMenuItem());
+            }
             item.setPrice(itemDetails.getPrice());
             item.setNotes(itemDetails.getNotes());
             item.setFirstName(itemDetails.getFirstName());
@@ -95,9 +106,17 @@ public class ItemController {
     @GetMapping("/items/order/{orderid}")
     public ResponseEntity<?> getAllItemsByOrderId(@PathVariable("orderid") String id) {
         try {
-            List<Item> orderItems = itemRepository.findAllByOrderId(id);
+            // Find the order first
+            Optional<Orders> orderOptional = orderRepository.findById(id);
+            if (!orderOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Order not found with id: " + id);
+            }
+            
+            Orders order = orderOptional.get();
+            List<Item> orderItems = order.getItems();
 
-            if (orderItems.isEmpty()) {
+            if (orderItems == null || orderItems.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("No items found for order ID: " + id);
             }
@@ -117,8 +136,17 @@ public class ItemController {
     public ResponseEntity<?> updateItemsToOrder(@PathVariable("orderId") String orderId,
                                              @RequestBody List<Item> items) {
         try {
+            // Find the order first
+            Optional<Orders> orderOptional = orderRepository.findById(orderId);
+            if (!orderOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Order not found with id: " + orderId);
+            }
+            
+            Orders order = orderOptional.get();
+            
             for (Item item : items) {
-                item.setOrderId(orderId);
+                item.setOrder(order);
             }
 
             Iterable<Item> savedItems = itemRepository.saveAll(items);
@@ -136,9 +164,17 @@ public class ItemController {
     @DeleteMapping("/items/order/{orderid}")
     public ResponseEntity<?> deleteItemsFromOrder(@PathVariable("orderid") String orderId) {
         try {
-            List<Item> itemsToDelete = itemRepository.findAllByOrderId(orderId);
+            // Find the order first
+            Optional<Orders> orderOptional = orderRepository.findById(orderId);
+            if (!orderOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Order not found with id: " + orderId);
+            }
+            
+            Orders order = orderOptional.get();
+            List<Item> itemsToDelete = order.getItems();
 
-            if (itemsToDelete.isEmpty()) {
+            if (itemsToDelete == null || itemsToDelete.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("No items found for order ID: " + orderId);
             }

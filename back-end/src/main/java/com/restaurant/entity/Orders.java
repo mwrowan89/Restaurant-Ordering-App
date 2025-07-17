@@ -11,11 +11,15 @@
  @GeneratedValue(strategy = GenerationType.IDENTITY)
  @Column (name = "id")
  private Long orderId;
+ 
+ @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+ @com.fasterxml.jackson.annotation.JsonManagedReference
+ private java.util.List<Item> items;
 
-// @ManyToOne
-// @JoinColumn
- @Column (name = "userid", nullable = false)
- private String userid;
+ @ManyToOne
+ @JoinColumn(name = "userid", nullable = false)
+ @com.fasterxml.jackson.annotation.JsonBackReference(value = "user-orders")
+ private User user;
 
  @Column (name = "ordertime")
  private LocalDateTime orderTime;
@@ -48,12 +52,12 @@
  this.orderId = id;
  }
 
- public String getUserid() {
- return userid;
+ public User getUser() {
+ return user;
  }
 
- public void setUserid(String user) {
- this.userid = user;
+ public void setUser(User user) {
+ this.user = user;
  }
 
  public LocalDateTime getOrderTime() {
@@ -102,6 +106,14 @@
 
  public void setTip(Double tip) {
  this.tip = tip;
+ }
+ 
+ public java.util.List<Item> getItems() {
+ return items;
+ }
+ 
+ public void setItems(java.util.List<Item> items) {
+ this.items = items;
  }
 
  public String getPan() {

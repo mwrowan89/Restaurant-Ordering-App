@@ -21,6 +21,10 @@ public class MenuItems {
     private String imageurl;
     @Column(name = "available", nullable = false)
     private Boolean available;
+    
+    @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonManagedReference(value = "item-menuItem")
+    private java.util.List<Item> items;
 
     // Getters and Setters
     public Long getId() {
@@ -77,5 +81,15 @@ public class MenuItems {
 
     public void setAvailable(Boolean available) {
         this.available = available;
+    }
+    
+    // Added for customer profile
+
+    public java.util.List<Item> getItems() {
+        return items;
+    }
+    
+    public void setItems(java.util.List<Item> items) {
+        this.items = items;
     }
 }

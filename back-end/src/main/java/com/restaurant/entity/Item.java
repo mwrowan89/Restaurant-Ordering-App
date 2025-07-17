@@ -10,16 +10,15 @@
  @Column(name = "id")
  private int itemId;
 
- // Assuming Order and MenuItem are other entities in your application
-// @ManyToOne
-// @JoinColumn(name = "orderid", nullable = false)
-  @Column(name = "orderid", nullable = false)
-  private String orderId;
+ @ManyToOne
+ @JoinColumn(name = "orderid", nullable = false)
+ @com.fasterxml.jackson.annotation.JsonBackReference
+ private Orders order;
 
-// @ManyToOne
-// @JoinColumn(name = "itemid", nullable = false)
- @Column(name = "itemid", nullable = false)
- private String menuItem;
+ @ManyToOne
+ @JoinColumn(name = "itemid", nullable = false)
+ @com.fasterxml.jackson.annotation.JsonBackReference(value = "item-menuItem")
+ private MenuItems menuItem;
 
  @Column(name = "price", nullable = false)
  private double price;
@@ -39,19 +38,19 @@
  this.itemId = id;
  }
 
- public String getOrderId() {
- return orderId;
+ public Orders getOrder() {
+ return order;
  }
 
- public void setOrderId(String orderId) {
- this.orderId = orderId;
+ public void setOrder(Orders order) {
+ this.order = order;
  }
 
- public String getMenuItem() {
+ public MenuItems getMenuItem() {
  return menuItem;
  }
 
- public void setMenuItem(String menuItem) {
+ public void setMenuItem(MenuItems menuItem) {
  this.menuItem = menuItem;
  }
 

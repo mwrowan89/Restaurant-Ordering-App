@@ -9,6 +9,10 @@
 @GeneratedValue(strategy = GenerationType.IDENTITY)
  @Column(name = "ID", nullable = false)
  private Long userId;
+ 
+ @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+ @com.fasterxml.jackson.annotation.JsonManagedReference(value = "user-orders")
+ private java.util.List<Orders> orders;
 
  @Column(name = "USERNAME", nullable = false, unique = true)
  private String username;
@@ -43,8 +47,6 @@
  @Column(name = "EXPIRY_YEAR")
  private Integer expiryYear;
 
-// @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name =
-// "user_id"))
  @Column(name = "ROLES")
  private String role;
 
@@ -151,5 +153,13 @@
 
  public void setRole(String role) {
  this.role = role;
+ }
+ 
+ public java.util.List<Orders> getOrders() {
+ return orders;
+ }
+ 
+ public void setOrders(java.util.List<Orders> orders) {
+ this.orders = orders;
  }
  }

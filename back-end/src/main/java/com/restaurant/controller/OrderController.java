@@ -3,7 +3,7 @@ package com.restaurant.controller;
 import com.restaurant.entity.Orders;
 import com.restaurant.entity.User;
 import com.restaurant.repository.OrderRepository;
-import org.aspectj.weaver.ast.Or;
+import com.restaurant.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +17,9 @@ import java.util.*;
 public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     // View all orders in DB
     @GetMapping("/orders")
@@ -73,7 +76,10 @@ public class OrderController {
 
             Orders order = optionalOrder.get();
 
-            order.setUserid(orderDetails.getUserid());
+            // Set user if provided in the request
+            if (orderDetails.getUser() != null) {
+                order.setUser(orderDetails.getUser());
+            }
             order.setOrderTime(orderDetails.getOrderTime());
             order.setPickupTime(orderDetails.getPickupTime());
             order.setArea(orderDetails.getArea());
@@ -117,8 +123,17 @@ public class OrderController {
     @GetMapping("/orders/user/{userid}")
     public ResponseEntity<?> getOrdersByUserId(@PathVariable("userid") String userid) {
         try {
-            List<Orders> orders = orderRepository.findByUserid(userid);
-            if (orders.isEmpty()) {
+            // Find the user first
+            Optional<User> userOptional = userRepository.findById(userid);
+            if (!userOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("User not found with id: " + userid);
+            }
+            
+            User user = userOptional.get();
+            List<Orders> orders = user.getOrders();
+            
+            if (orders == null || orders.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("No orders found for userId: " + userid);
             }

@@ -17,9 +17,6 @@
  @Column(name = "homepage")
  private String homepage;
 
-// @Column()
-// private LocalDate releaseDate;
-
  @Column(name = "overview", length = 1500)
  private String overview;
 
