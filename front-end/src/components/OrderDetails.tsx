@@ -17,7 +17,7 @@ interface Order {
 
 interface OrderItems {
   id: number;
-  orderid: number;
+  orderId: number;
   itemid: number;
   price: number;
   notes: string;
@@ -42,15 +42,20 @@ const OrderDetails = () => {
         const orderItemsResponse = await axios.get<OrderItems[]>(
           `/api/items/order/${orderId}`
         );
+        console.log("Order Items Response: ", orderItemsResponse.data)
 
         // Map order items from menu items
         const filteredMenuItems = orderItemsResponse.data
           .map((orderItem) =>
-            menuItems.find((menuItem) => parseInt(menuItem.id) === orderItem.itemid)
+            menuItems.find((menuItem) => parseInt(menuItem.id) === orderItem.id)
           )
           .filter((item): item is MenuItem => item !== undefined);
 
-        setOrderMenuItems(filteredMenuItems);
+          // 
+          // This is empty
+          setOrderMenuItems(filteredMenuItems);
+          // 
+          // 
         setErrorMessage(null);
       } catch (error) {
         if (
@@ -85,6 +90,9 @@ const OrderDetails = () => {
   if (!order) {
     return <p>Loading order details...</p>;
   }
+
+  console.log("Filtered Menu Items: ", orderMenuItems);
+  console.log("Order: ", order);
 
   return (
     <div className="orders-container">
