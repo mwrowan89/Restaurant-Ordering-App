@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,7 +114,45 @@ public class ItemController {
     }
 
     // Add list of items to an order
+    @PostMapping("/items/order/{orderId}")
+    public ResponseEntity<?> updateItemsToOrder(@PathVariable("orderId") String orderId,
+                                             @RequestBody List<Item> items) {
+        try {
+            for (Item item : items) {
+                item.setOrderId(orderId);
+            }
+
+            Iterable<Item> savedItems = itemRepository.saveAll(items);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedItems);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while adding items to the order.");
+        }
+    }
+
 
     // Delete to remove a particular item from an order
+    @DeleteMapping("/items/order/{orderid}")
+    public ResponseEntity<?> deleteItemsFromOrder(@PathVariable("orderid") String orderId) {
+        try {
+            List<Item> itemsToDelete = itemRepository.findAllByOrderId(orderId);
+
+            if (itemsToDelete.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No items found for order ID: " + orderId);
+            }
+
+            itemRepository.deleteAll(itemsToDelete);
+            return ResponseEntity.ok("All items for order ID " + orderId + " have been deleted.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting items from the order.");
+        }
+    }
+
 
 }
