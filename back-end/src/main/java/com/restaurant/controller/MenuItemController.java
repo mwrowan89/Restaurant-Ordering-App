@@ -64,7 +64,7 @@ public class MenuItemController {
             menuItems.setDescription(menuItem.getDescription());
             menuItems.setPrice(menuItem.getPrice());
 
-            MenuItems updatedMenuItem = menuItemRepository.save(menuItem);
+            MenuItems updatedMenuItem = menuItemRepository.save(menuItems);
             return ResponseEntity.ok(updatedMenuItem);
         } catch (Exception e) {
             // TODO add exception classes
