@@ -52,7 +52,7 @@ public class MenuItemController {
                                             @RequestBody MenuItems menuItem) {
         try {
             Optional<MenuItems> optionalMenuItems = menuItemRepository.findById(id);
-            if(!optionalMenuItems.isPresent()){
+            if(optionalMenuItems.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No menu item with provided id: " + id);
             }
             MenuItems menuItems = optionalMenuItems.get();
@@ -67,7 +67,6 @@ public class MenuItemController {
             MenuItems updatedMenuItem = menuItemRepository.save(menuItems);
             return ResponseEntity.ok(updatedMenuItem);
         } catch (Exception e) {
-            // TODO add exception classes
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while updating the user: " + e.getMessage());
         }
@@ -78,7 +77,7 @@ public class MenuItemController {
     public ResponseEntity<?> deleteMenuItem(@PathVariable(value = "id") String id) {
         try {
             Optional<MenuItems> optionalMenuItem = menuItemRepository.findById(id);
-            if (!optionalMenuItem.isPresent()) {
+            if (optionalMenuItem.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body("Menu item not found with id: " + id);
             }
