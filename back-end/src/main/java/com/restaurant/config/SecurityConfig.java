@@ -12,7 +12,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()       // Disable CSRF if you want POST requests to work without CSRF token
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()); // Allow all requests without auth
+                .authorizeHttpRequests(auth -> auth
+                
+                // Implement redirect user to login on protected endpoints
+                // .requestMatchers("/api/orders").hasRole("USER") 
+                // .requestMatchers("/api/menuItems/edit/**").hasRole("ADMIN")
+
+                .anyRequest().permitAll()); // Allow all requests without auth
 
         return http.build();
     }
