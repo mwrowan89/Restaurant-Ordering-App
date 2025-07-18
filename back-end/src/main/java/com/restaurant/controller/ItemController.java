@@ -1,5 +1,6 @@
 package com.restaurant.controller;
 
+import com.restaurant.entity.Film;
 import com.restaurant.entity.Item;
 import com.restaurant.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,18 @@ public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
+    // Retrieve all items
     @GetMapping("/items")
-    public List<Item> getItems(){
-        List<Item> items = new ArrayList<>();
-        itemRepository.findAll().forEach(items::add);
-        return items;
+    public ResponseEntity<?> getItems() {
+        try {
+            List<Item> items = new ArrayList<>();
+            itemRepository.findAll().forEach(items::add);
+            return ResponseEntity.ok(items);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving items.");
+        }
     }
 
     // Get an item by its id

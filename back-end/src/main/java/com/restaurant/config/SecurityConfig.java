@@ -18,7 +18,9 @@ public class SecurityConfig {
                 // .requestMatchers("/api/orders").hasRole("USER") 
                 // .requestMatchers("/api/menuItems/edit/**").hasRole("ADMIN")
 
+             
                 .anyRequest().permitAll()); // Allow all requests without auth
+                // ^^^^^ remove this when auth is implemented ^^^^^^
 
         return http.build();
     }

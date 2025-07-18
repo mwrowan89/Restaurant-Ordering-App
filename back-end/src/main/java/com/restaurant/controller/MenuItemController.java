@@ -1,5 +1,6 @@
 package com.restaurant.controller;
 
+import com.restaurant.entity.Film;
 import com.restaurant.entity.MenuItems;
 import com.restaurant.repository.MenuItemRepository;
 import org.slf4j.Logger;
@@ -10,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// TODO ADD comments
 @RestController
 @RequestMapping("/api")
 public class MenuItemController {
@@ -25,11 +26,19 @@ public class MenuItemController {
 
     // Get all menu items
     @GetMapping("/menuitems")
-    public List<MenuItems> getAllMenuItems() {
-        List<MenuItems> items = menuItemRepository.findAll();
-        return items;
+    public ResponseEntity<?> getAllMenuItems() {
+        try {
+            List<MenuItems> menuItems = new ArrayList<>();
+            menuItemRepository.findAll().forEach(menuItems::add);
+            return ResponseEntity.ok(menuItems);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving menu items.");
+        }
     }
 
+    // Add a new menu item
     @PostMapping("/menuitems")
     public ResponseEntity<MenuItems> addMenuItem(@RequestBody MenuItems menuItem) {
         MenuItems newMenuItem = menuItemRepository.save(menuItem);
@@ -47,6 +56,7 @@ public class MenuItemController {
         }
     }
 
+    // Update menu item by ID
     @PutMapping("/menuitems/{id}")
     public ResponseEntity<?> updateMenuItem(@PathVariable(value = "id") String id,
                                             @RequestBody MenuItems menuItem) {
@@ -72,7 +82,9 @@ public class MenuItemController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    // Delete menu item by ID - when auth is implemented, only admin can delete
+    // TODO add auth and uncomment
+    // @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/menuitems/{id}")
     public ResponseEntity<?> deleteMenuItem(@PathVariable(value = "id") String id) {
         try {

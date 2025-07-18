@@ -1,5 +1,6 @@
 package com.restaurant.controller;
 
+import com.restaurant.entity.Orders;
 import com.restaurant.entity.User;
 import com.restaurant.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//TODO add try catches
-// TODO Add comments
+//TODO add custom exception classes
 
 @RestController
 @RequestMapping("/api")
@@ -21,17 +22,35 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    // Get all users
+    // TODO add auth and uncomment
+    // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<?> getAllUsers() {
+        try {
+            List<User> users = new ArrayList<>();
+            userRepository.findAll().forEach(users::add);
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving users.");
+        }
     }
 
+    // Create a new user
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User saveUser = userRepository.save(user);
-        return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try {
+            User saveUser = userRepository.save(user);
+            return new ResponseEntity<>(saveUser, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while creating the user: " + e.getMessage());
+        }
     }
 
+    // Get user by ID
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUserById(@PathVariable(value = "id") String id) {
         try {
@@ -48,7 +67,7 @@ public class UserController {
         }
     }
 
-
+    // Update user by ID
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(
             @PathVariable(value = "id") String id,
@@ -83,7 +102,9 @@ public class UserController {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    // Delete user by ID
+    // TODO add auth and uncomment
+    // @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable(value = "id") String id) {
         try {
@@ -99,8 +120,4 @@ public class UserController {
                     .body("An error occurred while deleting the user: " + e.getMessage());
         }
     }
-//    @GetMapping("/test2")
-//    public ResponseEntity<String> testEndpoint() {
-//        return ResponseEntity.ok("API is working");
-//    }
 }

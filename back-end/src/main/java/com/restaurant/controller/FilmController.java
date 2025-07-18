@@ -22,6 +22,7 @@ public class FilmController {
     @Autowired
     private FilmRepository filmRepository;
 
+    // Retrieve all films
     @GetMapping("/films")
     public ResponseEntity<?> getAllFilms() {
         try {
@@ -35,6 +36,7 @@ public class FilmController {
         }
     }
 
+    // Add a new film
     @PostMapping("/films")
     public ResponseEntity<?> addFilm(@RequestBody Film film) {
         try {
@@ -47,6 +49,7 @@ public class FilmController {
         }
     }
 
+    // Get a film by ID
     @GetMapping("/films/{id}")
     public ResponseEntity<?> getFilmById(@PathVariable("id") String id) {
         try {
@@ -64,6 +67,7 @@ public class FilmController {
         }
     }
 
+    // Update a film by ID
     @PutMapping("/films/{id}")
     public ResponseEntity<?> updateFilm(@PathVariable("id") String id, @RequestBody Film updatedFilm) {
         try {
@@ -98,6 +102,7 @@ public class FilmController {
     }
 
 
+    // Delete a film by ID
     @DeleteMapping("/films/{id}")
     public ResponseEntity<?> deleteFilm(@PathVariable("id") String id) {
         try {

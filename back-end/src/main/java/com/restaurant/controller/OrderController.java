@@ -1,5 +1,6 @@
 package com.restaurant.controller;
 
+import com.restaurant.entity.Film;
 import com.restaurant.entity.Orders;
 import com.restaurant.entity.User;
 import com.restaurant.repository.OrderRepository;
@@ -20,10 +21,16 @@ public class OrderController {
 
     // View all orders in DB
     @GetMapping("/orders")
-    public List<Orders> getAllOrders() {
-        List<Orders> orders = new ArrayList<>();
-        orderRepository.findAll().forEach(orders::add);
-        return orders;
+    public ResponseEntity<?> getAllOrders() {
+        try {
+            List<Orders> orders = new ArrayList<>();
+            orderRepository.findAll().forEach(orders::add);
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving orders.");
+        }
     }
 
     // Create an order
@@ -96,7 +103,8 @@ public class OrderController {
     }
 
     // Delete an order entry
-    @PreAuthorize("hasRole('ADMIN')")
+    // TODO add auth and uncomment
+    // @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable(value = "id") String orderId) {
         try {
