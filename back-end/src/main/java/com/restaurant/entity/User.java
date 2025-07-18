@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -52,4 +53,14 @@ public class User {
     // @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "ROLES")
     private String role;
+
+    // For Auth purposes
+    @Column(name = "activated", nullable = false)
+    private boolean activated = false;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
+    private Set<Authority> authorities;
+
+
 }
