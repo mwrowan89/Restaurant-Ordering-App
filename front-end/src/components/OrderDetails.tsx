@@ -8,7 +8,7 @@ import { MenuItem } from "../types/MenuItemType";
 interface Order {
   id: number;
   userid: number;
-  ordertime: string;
+  orderTime: string;
   tax: number;
   tip: number;
   total: number;
@@ -16,12 +16,12 @@ interface Order {
 }
 
 interface OrderItems {
-  id: number;
-  orderid: number;
-  itemid: number;
+  itemId: number;
+  orderId: string;
+  menuItem: string;
   price: number;
   notes: string;
-  firstname: string;
+  firstName: string;
 }
 
 const OrderDetails = () => {
@@ -45,11 +45,14 @@ const OrderDetails = () => {
 
         // Map order items from menu items
         const filteredMenuItems = orderItemsResponse.data
-          .map((orderItem) =>
-            menuItems.find((menuItem) => menuItem.id === orderItem.itemid)
-          )
+          .map((orderItem) => {
+            return menuItems.find((menuItem) => 
+              menuItem.id === orderItem.menuItem || 
+              String(menuItem.id) === String(orderItem.menuItem)
+            );
+          })
           .filter((item): item is MenuItem => item !== undefined);
-
+          
         setOrderMenuItems(filteredMenuItems);
         setErrorMessage(null);
       } catch (error) {
@@ -86,6 +89,7 @@ const OrderDetails = () => {
     return <p>Loading order details...</p>;
   }
 
+
   return (
     <div className="orders-container">
       <h1 className="orders-title">Order Details</h1>
@@ -94,7 +98,7 @@ const OrderDetails = () => {
       </p>
       <p>
         <strong>Order Time:</strong>{" "}
-        {new Date(order.ordertime).toLocaleString()}
+        {new Date(order.orderTime).toLocaleString()}
       </p>
       <p>
         <strong>Status:</strong> {order.status}

@@ -1,0 +1,79 @@
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb_container_daam
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: secret123
+      MARIADB_DATABASE: daamdb
+      MARIADB_USER: root
+      MARIADB_PASSWORD: secret123
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./back-end/src/main/resources/data.sql:/docker-entrypoint-initdb.d/data.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MARIADB_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#  auth-service:
+#    image: eclipse-temurin:21-jdk-jammy
+#    container_name: auth_service
+#    restart: unless-stopped
+#    environment:
+#      - DB_HOST=mariadb
+#      - DB_PORT=3306
+#      - DB_NAME=daamdb
+#      - DB_USER=root
+#      - DB_PASSWORD=secret123
+#      - SERVER_PORT=9000
+#    volumes:
+#      - ../backend/Capstone_Java_Backend/Auth:/app
+#    working_dir: /app
+#    command: java -jar ./daam-auth-0.0.1-SNAPSHOT.jar
+#    ports:
+#      - "9000:9000"
+#    depends_on:
+#      - mariadb
+#    networks:
+#      - app-network
+
+  back-end:
+    image: eclipse-temurin:17-jdk-jammy
+    container_name: restaurant_backend
+    restart: unless-stopped
+    environment:
+      - spring.datasource.url=jdbc:mysql://mariadb:3306/daamdb
+      - spring.datasource.username=root
+      - spring.datasource.password=secret123
+      - spring.jpa.show-sql=true
+      - spring.jpa.generate-ddl=true
+      - spring.jpa.defer-datasource-initialization=true
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.sql.init.mode=always
+      - spring.sql.init.continue-on-error=true
+      - server.port=8080
+    volumes:
+      - ./back-end:/app
+    working_dir: /app
+    command: ./mvnw spring-boot:run
+    ports:
+      - "8080:8080"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

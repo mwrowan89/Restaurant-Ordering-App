@@ -6,7 +6,7 @@ import "./Orders.css";
 interface Order {
   id: number;
   userid: number;
-  ordertime: string;
+  orderTime: string; // Changed from ordertime to orderTime to match backend
   tax: number;
   tip: number;
   total: number;
@@ -22,6 +22,7 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get<Order[]>("/api/orders");
+        console.log("Fetched Orders: ", response.data);
         setOrders(response.data);
         setErrorMessage(null);
       } catch {
@@ -62,7 +63,7 @@ const Orders = () => {
                   onClick={() => handleRowClick(order.id)}
                 >
                   <td>{order.id}</td>
-                  <td>{new Date(order.ordertime).toLocaleString()}</td>
+                  <td>{new Date(order.orderTime).toLocaleString()}</td>
                   <td>{order.status}</td>
                 </tr>
               ))}

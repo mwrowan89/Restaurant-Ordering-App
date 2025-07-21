@@ -15,16 +15,16 @@ interface OrderItem {
 
 interface OrderData {
   userid: string;
-  ordertime: string;
-  items: OrderItem[];
+  orderTime: string;
+  items?: OrderItem[];
   tax: number;
   tip: number;
-  paymentMethod: PaymentMethod;
+  paymentMethod?: PaymentMethod;
   pan: string;
   expiryMonth: string;
   expiryYear: string;
   status: "pending" | "completed" | "cancelled";
-  id: string;
+  id?: string;
   total?: number;
 }
 
@@ -74,20 +74,19 @@ const Checkout = () => {
       : cartTotal * selectedTip;
 
     const orderData: OrderData = {
-      userid: paymentMethod.userid.toString(),
-      ordertime: new Date().toISOString(),
+      userid: paymentMethod.userid ? paymentMethod.userid.toString() : "1",
+      orderTime: new Date().toISOString(),
       items: cart.map((item) => ({
         ...item,
-        id: item.id.toString(),
+        id: item.id ? item.id.toString() : "",
       })),
       tax,
       tip,
       paymentMethod,
       pan: paymentMethod.pan,
-      expiryMonth: paymentMethod.expiryMonth.toString(),
-      expiryYear: paymentMethod.expiryYear.toString(),
-      status: "pending",
-      id: "",
+      expiryMonth: paymentMethod.expiryMonth ? paymentMethod.expiryMonth.toString() : "",
+      expiryYear: paymentMethod.expiryYear ? paymentMethod.expiryYear.toString() : "",
+      status: "pending"
     };
 
     try {
@@ -96,19 +95,19 @@ const Checkout = () => {
 
       const menuItemsData = cart.map((item) => ({
         orderid: createdOrderData.id,
-        itemid: item.id,
+        menuItem: item.id,
         price: grandTotal,
         notes: item.name,
         firstName: paymentMethod.name,
       }));
 
       await axios.post(
-        `/api/items/order/${createdOrderData.id}`,
+        `/api/items/order/${createdOrderData.orderId}`,
         menuItemsData
       );
 
       clearCart();
-      navigate(`/orders/${createdOrderData.id}`);
+      navigate(`/orders/${createdOrderData.orderId}`);
     } catch (error) {
       console.error("Error submitting order or menu items:", error);
       alert("Failed to submit order or menu items. Please try again.");

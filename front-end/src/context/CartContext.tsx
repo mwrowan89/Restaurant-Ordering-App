@@ -22,7 +22,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [cart]);
 
   const addToCart = (item: CartItem) => {
-    console.log("Adding item to cart:", item);
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
@@ -36,14 +35,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
   const clearCart = () => {
     setCart([]);
   };
 
-  const updateCartItemQuantity = (id: number, quantity: number) => {
+  const updateCartItemQuantity = (id: string, quantity: number) => {
     setCart((prevCart) =>
       prevCart.map((item) => (item.id === id ? { ...item, quantity } : item))
     );

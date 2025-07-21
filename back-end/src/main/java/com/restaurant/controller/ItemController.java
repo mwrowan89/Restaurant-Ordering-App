@@ -1,5 +1,6 @@
 package com.restaurant.controller;
 
+import com.restaurant.entity.Film;
 import com.restaurant.entity.Item;
 import com.restaurant.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,18 @@ public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
+    // Retrieve all items
     @GetMapping("/items")
-    public List<Item> getItems(){
-        List<Item> items = new ArrayList<>();
-        itemRepository.findAll().forEach(items::add);
-        return items;
+    public ResponseEntity<?> getItems() {
+        try {
+            List<Item> items = new ArrayList<>();
+            itemRepository.findAll().forEach(items::add);
+            return ResponseEntity.ok(items);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while retrieving items.");
+        }
     }
 
     // Get an item by its id
@@ -57,7 +65,7 @@ public class ItemController {
 
             Item item = optionalItem.get();
 
-            item.setOrderId(itemDetails.getOrderId());
+            item.setOrder(itemDetails.getOrder());
             item.setMenuItem(itemDetails.getMenuItem());
             item.setPrice(itemDetails.getPrice());
             item.setNotes(itemDetails.getNotes());
@@ -95,7 +103,7 @@ public class ItemController {
     @GetMapping("/items/order/{orderid}")
     public ResponseEntity<?> getAllItemsByOrderId(@PathVariable("orderid") String id) {
         try {
-            List<Item> orderItems = itemRepository.findAllByOrderId(id);
+            List<Item> orderItems = itemRepository.findAllByOrder(id);
 
             if (orderItems.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -113,7 +121,45 @@ public class ItemController {
     }
 
     // Add list of items to an order
+    @PostMapping("/items/order/{orderId}")
+    public ResponseEntity<?> updateItemsToOrder(@PathVariable("orderId") String orderId,
+                                             @RequestBody List<Item> items) {
+        try {
+            for (Item item : items) {
+                item.setOrder(orderId);
+            }
+
+            Iterable<Item> savedItems = itemRepository.saveAll(items);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedItems);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while adding items to the order.");
+        }
+    }
+
 
     // Delete to remove a particular item from an order
+    @DeleteMapping("/items/order/{orderid}")
+    public ResponseEntity<?> deleteItemsFromOrder(@PathVariable("orderid") String orderId) {
+        try {
+            List<Item> itemsToDelete = itemRepository.findAllByOrder(orderId);
+
+            if (itemsToDelete.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No items found for order ID: " + orderId);
+            }
+
+            itemRepository.deleteAll(itemsToDelete);
+            return ResponseEntity.ok("All items for order ID " + orderId + " have been deleted.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while deleting items from the order.");
+        }
+    }
+
 
 }
